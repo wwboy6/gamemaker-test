@@ -26,6 +26,7 @@ show_debug_message(is_instanceof(new Promise(), Promise));
 show_debug_message(is_instanceof(new Promise(), Deferred));
 */
 
+/*
 function someAsyncOp() {
 	return Promise.Resolved().next(function () {
 		return delayOp(1);
@@ -76,4 +77,14 @@ delayOp(1)
 	})
 	.error(function (error) {
 		show_debug_message($"err {error.message} {error.stacktrace}");
+	})
+*/
+
+HTTPControllerI.requestHttpGet("https://httpbin.org/anything")
+	.next(function (result) {
+		var request = result.request;
+		var response = result.response;
+		show_debug_message($"request {request.url}");
+		var responseBody = response[? "result"];
+		show_debug_message($"response {responseBody}");
 	})
