@@ -26,6 +26,29 @@ show_debug_message(is_instanceof(new Promise(), Promise));
 show_debug_message(is_instanceof(new Promise(), Deferred));
 */
 
+function someAsyncOp() {
+	return Promise.Resolved().next(function () {
+		return delayOp(1);
+	})
+	.next(function (num) {
+		show_debug_message($"1 - {num}");
+		return delayOp(num);
+	})
+	.next(function (num) {
+		show_debug_message($"2 - {num}");
+		return delayOp(num);
+	})
+	.next(function (num) {
+		show_debug_message($"3 - {num}");
+		return $"test {num}";
+	})
+	.next(function (str) {
+		show_debug_message($"final {str}");
+	})
+	.next(function () {	
+		throw new Exception("test error 2");
+	});
+}
 
 delayOp(1)
 	.next(function (num) {
@@ -45,26 +68,12 @@ delayOp(1)
 		show_debug_message($"final {str}");
 	})
 	.error(function (error) {
-		show_debug_message($"err {error.message}");
+		show_debug_message($"err {error.message} {error.stacktrace}");
 	})
+	//.next(method(self, someAsyncOp))
 	.next(function () {
-		return delayOp(1);
+		return someAsyncOp();
 	})
-	.next(function (num) {
-		show_debug_message($"1 - {num}");
-		return delayOp(num);
+	.error(function (error) {
+		show_debug_message($"err {error.message} {error.stacktrace}");
 	})
-	.next(function (num) {
-		show_debug_message($"2 - {num}");
-		return delayOp(num);
-	})
-	.next(function (num) {
-		show_debug_message($"3 - {num}");
-		return $"test {num}";
-	})
-	.next(function (str) {
-		show_debug_message($"final {str}");
-	})
-	.next(function () {	
-		throw new Exception("test error");
-	});

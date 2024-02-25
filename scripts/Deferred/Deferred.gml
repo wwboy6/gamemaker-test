@@ -10,9 +10,6 @@ function AsyncOperation(_callback) constructor {
 		return __.deferred.promise;
 	};
 	static process = function (value) {
-		if (is_instanceof(value, Exception)) {
-			show_debug_message("here");
-		}
 		var result = undefined;
 		var success = false;
 		try {
@@ -43,7 +40,7 @@ function AsyncOperation(_callback) constructor {
 // as so the Promise is created
 function Deferred() constructor {
 	promise = new Promise();
-	static resolve = function(_returnValue) {
+	static resolve = function(_returnValue = undefined) {
 		promise.__resolve(_returnValue);
 	}
 	static reject = function(_error) {
@@ -128,3 +125,11 @@ function Promise() constructor {
 		array_push(__.chainedDeferreds, deferred);
 	}
 }
+
+// helpers
+
+Promise.Resolved = function () {
+	var deferred = new Deferred();
+	deferred.resolve();
+	return deferred.promise;
+};
